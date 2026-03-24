@@ -18,55 +18,49 @@ import jakarta.annotation.PostConstruct;
 @LineMessageHandler
 public class MyLineBotHandler {
 
-    @Value("${gemini.api-key}")
-    private String geminiApiKey;
+	@Value("${gemini.api-key}")
+	private String geminiApiKey;
 
-    private Client client;
+	private Client client;
 
-    @PostConstruct
-    public void init() {
-        this.client = Client.builder()
-                .apiKey(geminiApiKey)
-                .build();
-    }
+	@PostConstruct
+	public void init() {
+		this.client = Client.builder().apiKey(geminiApiKey).build();
+	}
 
-    @EventMapping
-    public TextMessage handleTextMessageEvent(MessageEvent event) {
-        if (event.message() instanceof TextMessageContent userMsg) {
-            String userText = userMsg.text();
+	@EventMapping
+	public TextMessage handleTextMessageEvent(MessageEvent event) {
+		if (event.message() instanceof TextMessageContent userMsg) {
+			String userText = userMsg.text();
 
-            System.out.println("收到使用者訊息：" + userText);
+			System.out.println("收到使用者訊息：" + userText);
 
-            try {
-                // ⭐ 最重要：使用正確的模型 ID
-                GenerateContentResponse response = client.models.generateContent(
-                        "gemini-2.5-flash",   // 2025 最新、保證能用
-                        userText,
-                        null
-                );
+			try {
+				// ⭐ 最重要：使用正確的模型 ID
+				GenerateContentResponse response = client.models.generateContent("gemini-2.5-flash", // 2025 最新、保證能用
+						userText, null);
 
-                String aiResponse = response.text();
-                
-                System.out.println("AI 回覆：" + aiResponse);
+				String aiResponse = response.text();
 
-                return new TextMessage(aiResponse != null ? aiResponse : "AI 沒有回覆內容");
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.print(e.getMessage());
-                if (e.getMessage().contains("429")) {
-                    return new TextMessage("Lonie Bot 接收太多資訊有點當機了，請稍等一分鐘再跟我聊天喔！");
-                }
-                return new TextMessage("系統忙碌中，請稍後再試。");
-            }
-            
-            
-        }
-        return null;
-    }
+				System.out.println("AI 回覆：" + aiResponse);
 
-    @EventMapping
-    public void handleDefaultMessageEvent(Event event) {
-        System.out.println("收到非文字事件: " + event);
-    }
+				return new TextMessage(aiResponse != null ? aiResponse : "AI 沒有回覆內容");
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.print(e.getMessage());
+				if (e.getMessage().contains("429")) {
+					return new TextMessage("Lonie Bot 接收太多資訊有點當機了，請稍等一分鐘再跟我聊天喔！");
+				}
+				return new TextMessage("系統忙碌中，請稍後再試。");
+			}
+
+		}
+		return null;
+	}
+
+	@EventMapping
+	public void handleDefaultMessageEvent(Event event) {
+		System.out.println("收到非文字事件: " + event);
+	}
 }
