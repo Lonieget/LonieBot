@@ -1,75 +1,53 @@
-# 🤖 LonieBot - LINE x Gemini AI 智慧聊天機器人
+# 🦷 LonieBot - AI 智慧牙醫診所秘書
 
-LonieBot 是一款基於 **Spring Boot 3.x** 開發的 LINE 聊天機器人，整合了 **Google Gemini Pro** 模型。它能即時接收 LINE 使用者的訊息，透過 AI 生成智慧回覆並回傳給使用者，打造流暢且現代化的對話體驗。
+[![Java Version](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![LINE SDK](https://img.shields.io/badge/LINE%20SDK-8.7.0-blue.svg)](https://github.com/line/line-bot-sdk-java)
 
----
-
-## 🚀 核心功能
-* **AI 智慧對話**：串接最新 Google Gemini API，提供自然且準確的語言處理。
-* **Webhook 整合**：採用 LINE Messaging SDK 3.x 異步處理機制。
-* **動態配置管理**：透過 `application.properties` 靈活管理 API 金鑰。
-* **後端驅動**：基於 Java 生態系構建，具備高度擴充性。
-
-## 🛠️ 技術棧
-* **後端框架**: Spring Boot 3.x
-* **程式語言**: Java 17+
-* **SDK**: LINE Messaging API SDK for Java (v3.x)
-* **AI 模型**: Google Gemini Pro API
-* **建構工具**: Maven
-* **資料庫**: MySQL (相容 8.0+)
+## 📌 專案簡介
+**LonieBot** 是一款結合 **Spring Boot** 與 **LINE Messaging API** 的智慧醫療助理。旨在透過自動化回覆系統，協助牙醫診所處理病患的初步諮詢與掛號引導。目前已實作基礎通訊架構，並預計整合 **Google Gemini AI** 進行自然語言處理（NLP），讓機器人具備專業的衛教諮詢能力。
 
 ---
 
-## 📦 快速開始
+## 🛠️ 技術核心 (Technical Highlights)
 
-### 1. 環境準備
-* **JDK 17** 或更高版本。
-* **Maven 3.6+**。
-* 一個 **LINE Developers** 帳號，並建立 Messaging API Channel。
-* 一個 **Google AI Studio** 帳號，獲取 Gemini API Key。
+### 1. 後端架構設計
+* **核心框架**：採用 **Spring Boot 3.4.3**，利用其強大的 Dependency Injection (DI) 與 Bean 管理特性。
+* **Webhook 處理**：透過 `@LineMessageHandler` 監聽 LINE 伺服器發出的 POST 請求，並實作 `@EventMapping` 進行精準的訊息事件分發。
+* **網路穿透**：使用 **ngrok** 建立安全隧道 (Tunneling)，解決本地端開發環境與外部 API 通訊的障礙。
 
-### 2. 設定檔配置
-請在 `src/main/resources/application.properties` 中填入你的金鑰（請務必妥善保管）：
+### 2. 進階環境優化 (Problem Solving)
+* **依賴管理優化**：針對開發環境中 Gradle 遠端倉庫抓取失敗的挑戰，實作了 **Local JAR Loading** 機制，確保專案建置的穩定性。
+* **建置指令**：熟練使用 `gradlew clean build --refresh-dependencies` 進行專案重構與緩存清理。
 
-```properties
-spring.application.name=LonieBot
+---
 
-# LINE Developers 設定
-line.bot.channel-token=${YOUR_CHANNEL_ACCESS_TOKEN}
-line.bot.channel-secret=${YOUR_CHANNEL_SECRET}
-line.bot.handler.path=/callback
+## 🚀 專案亮點與解決問題
 
-# Gemini AI 設定
-gemini.api-key=${YOUR_GEMINI_API_KEY}
+### 🔍 挑戰：解決版本遷移與依賴衝突
+在開發過程中，遇到了 SDK 版本不相容與網路連線問題：
+* **問題**：最新版 SDK (v9.x) 的 `TextMessage.builder()` 在特定環境下編譯異常，且遠端倉庫連線不穩定。
+* **解決方案**：
+  1. **手動掛載**：手動建立 `libs/` 目錄，將 `line-bot-spring-boot-starter-8.7.0.jar` 導入，並修改 `build.gradle` 的 `fileTree` 配置。
+  2. **程式重構**：將 Controller 邏輯改為 8.x 系列的建構子模式 (`new TextMessage()`)，成功恢復系統運作。
 
-# 資料庫設定
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/your_db_name
-spring.datasource.username=your_username
-spring.datasource.password=your_password
+---
 
-專案架構
-Plaintext
-src/main/java/
-└── com/lonie/bot/
-    ├── controller/      # Webhook 控制器 (處理 LINE 事件)
-    ├── service/         # Gemini API 呼叫邏輯 (包含 RestTemplate 實作)
-    ├── model/           # 資料實體與 DTO
-    └── config/          # Bean 配置與 RestTemplate 設定
-# 進入專案目錄
-cd LonieBot
+## 📋 功能清單 (Feature List)
+- [x] **即時回覆系統**：自動接收病患訊息並回傳確認通知。
+- [x] **Webhook 安全驗證**：成功通過 LINE Channel 伺服器驗證 (Status 200)。
+- [ ] **Gemini AI 整合**：預計實作智慧衛教對話，提供病患診療流程諮詢。
+- [ ] **掛號預約系統**：規劃串接資料庫（MySQL/H2）儲存病患預約時段。
 
-# 編擬並執行
-mvn spring-boot:run
+---
 
-安全提醒
-重要：請勿將包含真實 API Key 的 application.properties 上傳至公共儲存庫。
-
-建議使用 .gitignore 排除敏感設定檔，或改用環境變數注入 Secret。
-
-👤 作者
-Lonie (鄭宇翔)
-
-全端開發工程師 (Full-stack Developer)
-
-擅長技術：Angular、Spring Boot、Java、AI 應用整合。
+## 📂 專案結構
+```text
+LonieBot
+├── libs/                     # 手動掛載的 LINE SDK JAR 檔
+├── src/main/java/com/example/LonieBot/
+│   ├── LonieBotApplication.java # Spring Boot 啟動進入點
+│   └── controller/              # 負責處理 LINE Webhook 邏輯
+├── src/main/resources/
+│   └── application.properties    # LINE Channel Secret/Token 配置
+└── build.gradle                 # 專案建置與本地依賴配置
