@@ -1,11 +1,11 @@
-# 🦷 LonieBot - AI 智慧牙醫診所秘書
+# 🦷 LonieBot - AI 聊天機器人
 
 [![Java Version](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![LINE SDK](https://img.shields.io/badge/LINE%20SDK-8.7.0-blue.svg)](https://github.com/line/line-bot-sdk-java)
 
 ## 📌 專案簡介
-**LonieBot** 是一款結合 **Spring Boot** 與 **LINE Messaging API** 的智慧醫療助理。旨在透過自動化回覆系統，協助牙醫診所處理病患的初步諮詢與掛號引導。目前已實作基礎通訊架構，並預計整合 **Google Gemini AI** 進行自然語言處理（NLP），讓機器人具備專業的衛教諮詢能力。
+**LonieBot** 是一款結合 **Spring Boot** 與 **LINE Messaging API** 的聊天機器人。旨在透過自動化回覆系統，協助牙醫診所處理病患的初步諮詢與掛號引導。目前已實作基礎通訊架構，並預計整合 **Google Gemini AI** 進行自然語言處理（NLP），讓機器人具備專業的衛教諮詢能力。
 
 ---
 
