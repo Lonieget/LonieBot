@@ -1,28 +1,60 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '4.0.4'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Spring Boot Web 核心
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    
+    // Java 本地 Cache
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.3'
+    
+    // MySQL
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    
+    implementation 'com.linecorp.bot:line-bot-spring-boot-client:9.1.0'
+implementation 'com.linecorp.bot:line-bot-spring-boot-handler:9.1.0'
+    implementation 'com.linecorp.bot:line-bot-parser:9.13.0'
+    
+   // Google Generative AI (Gemini) - New SDK
+   implementation("com.google.genai:google-genai:1.44.0")
+
+    // Spring Boot Mail - 拿掉版本號，讓 Spring Boot 自動管理版本
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // DevTools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
