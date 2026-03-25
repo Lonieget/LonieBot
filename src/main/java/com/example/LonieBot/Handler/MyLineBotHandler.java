@@ -36,9 +36,8 @@ public class MyLineBotHandler {
 			System.out.println("收到使用者訊息：" + userText);
 
 			try {
-				// ⭐ 最重要：使用正確的模型 ID
-				GenerateContentResponse response = client.models.generateContent("gemini-2.5-flash", // 2025 最新、保證能用
-						userText, null);
+				GenerateContentResponse response = client.models.generateContent("gemini-2.5-flash", 
+						userText + "後面是限制 :限制回覆字數小於50  用男朋友的語氣回話", null);
 
 				String aiResponse = response.text();
 
